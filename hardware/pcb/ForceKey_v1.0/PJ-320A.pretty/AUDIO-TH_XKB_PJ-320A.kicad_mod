@@ -1,0 +1,268 @@
+(footprint "AUDIO-TH_XKB_PJ-320A"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -6.4 0)
+		(layer "F.SilkS")
+		(uuid "fc803c2b-08a5-4445-a742-b9a93a164de3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "AUDIO-TH_XKB_PJ-320A"
+		(at 0 6.4 0)
+		(layer "F.Fab")
+		(uuid "abb0f432-fb17-45be-8cf8-6ff1b057078a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a4ff43c2-f3af-43fe-bb5d-da20fe9bbe80")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "bfefe173-f08e-4966-b33c-77d3a05eeaa2")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "489917ee-445f-4fe0-ac5f-b689d17bf7b1")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -9.2 -3.05)
+		(end -9.2 3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "d661ce80-1735-4701-a187-f042e93800c9")
+	)
+	(fp_line
+		(start -9.2 -3.05)
+		(end -4.83 -3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "2521852a-faf1-45e3-b4f6-6ca1ddf3cd81")
+	)
+	(fp_line
+		(start -9.2 3.05)
+		(end 3.17 3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "ea4dda8c-3557-42b6-8908-ba3dfc914790")
+	)
+	(fp_line
+		(start -7.11 -3.05)
+		(end -7.11 3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b31e5cdf-5542-454c-832a-da1719cdc732")
+	)
+	(fp_line
+		(start -3.17 -3.05)
+		(end -1.83 -3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1a0df676-b268-4c81-9cda-9fc4a714b6c7")
+	)
+	(fp_line
+		(start -0.17 -3.05)
+		(end 2.17 -3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c887b1c1-5917-4cab-a372-5cabb5f404c0")
+	)
+	(fp_line
+		(start 3.83 -3.05)
+		(end 5.07 -3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "7a5ec1fa-11a7-4e1a-b6c3-9f8d36857909")
+	)
+	(fp_line
+		(start 4.83 3.05)
+		(end 5.2 3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1aaecf59-45ec-4bc3-b59a-3507c8df3fbc")
+	)
+	(fp_line
+		(start 5.2 2.18)
+		(end 5.2 -3.05)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "fdabbfb7-fab9-40ba-83c9-23c47996eeb2")
+	)
+	(fp_line
+		(start 5.2 3.05)
+		(end 5.2 2.62)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0da7405a-3b1e-4a85-8e75-502645032891")
+	)
+	(fp_circle
+		(center -5.6 0)
+		(end -5.41 0)
+		(stroke
+			(width 0.38)
+			(type solid)
+		)
+		(fill none)
+		(layer "Cmts.User")
+		(uuid "c891f54e-7a99-4859-acbe-9e300b62f75c")
+	)
+	(fp_circle
+		(center 1.4 0)
+		(end 1.59 0)
+		(stroke
+			(width 0.38)
+			(type solid)
+		)
+		(fill none)
+		(layer "Cmts.User")
+		(uuid "2f8b6878-9be6-4810-b17b-16c4c4616490")
+	)
+	(fp_circle
+		(center -9.2 -3.05)
+		(end -9.17 -3.05)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "3723e15e-431b-4b90-a6d1-5d6d0e68a4db")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "9c61cba4-aa3b-40df-8265-c09c0d4c75ad")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" thru_hole circle
+		(at -5.6 0)
+		(size 1.2 1.2)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "fab9cb21-902e-4317-aed6-91af69252981")
+	)
+	(pad "" thru_hole circle
+		(at 1.4 0)
+		(size 1.2 1.2)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "07f0dd46-8796-4dc3-bfdb-5b927fb9622d")
+	)
+	(pad "2" thru_hole oval
+		(at -4 -2.4 90)
+		(size 1 2)
+		(drill oval 0.500024 1.499997)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "965d2989-f433-4aee-a73d-62a947512bc6")
+	)
+	(pad "3" thru_hole oval
+		(at -1 -2.4 90)
+		(size 1 2)
+		(drill oval 0.500024 1.499997)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "aed2ed88-8f65-4da4-91b4-c26e9d41a791")
+	)
+	(pad "4" thru_hole oval
+		(at 3 -2.4 90)
+		(size 1 2)
+		(drill oval 0.500024 1.499997)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "43b1d712-3611-4901-b08e-d2d184b040e1")
+	)
+	(pad "5" thru_hole oval
+		(at 4 2.4 90)
+		(size 1 2)
+		(drill oval 0.500024 1.499997)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "586099c6-83f9-457c-b139-99dab3d6e75e")
+	)
+	(model "${KICAD_3RD_PARTY}/custom_models/PJ-320A/PJ-320A.3dshapes/AUDIO-TH_XKB_PJ-320A.wrl"
+		(offset
+			(xyz -2.1 -0 2.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 90)
+		)
+	)
+)

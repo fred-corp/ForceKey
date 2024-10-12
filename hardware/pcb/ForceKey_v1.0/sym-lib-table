@@ -1,0 +1,7 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "PJ-320A")(type "KiCad")(uri "${KIPRJMOD}/PJ-320A.kicad_sym")(options "")(descr ""))
+  (lib (name "PY32")(type "KiCad")(uri "${KIPRJMOD}/PY32.kicad_sym")(options "")(descr ""))
+  (lib (name "TYPE-C")(type "KiCad")(uri "${KIPRJMOD}/TYPE-C.kicad_sym")(options "")(descr ""))
+  (lib (name "PJ4054B")(type "KiCad")(uri "${KIPRJMOD}/PJ4054B.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,219 @@
+(footprint "SOP-8_L4.9-W3.9-P1.27-LS6.0-BL-1"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -6.68 0)
+		(layer "F.SilkS")
+		(uuid "2ff15a28-2913-4c23-b985-ed26b845dcd9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SOP-8_L4.9-W3.9-P1.27-LS6.0-BL-1"
+		(at 0 6.68 0)
+		(layer "F.Fab")
+		(uuid "1f1b535b-9c18-474c-9dd6-8ce13adfada0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6c171690-2724-4552-9c1a-fb57e09d8091")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7a29bfec-dc44-4cb1-8ad3-2c6523224b07")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6ef1cc7d-34c8-4efc-8126-d5c2e0b8b144")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -2.58 -1.52)
+		(end 2.58 -1.52)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "cde107c5-a583-4f2d-8d54-2459647e47c9")
+	)
+	(fp_line
+		(start -2.58 1.52)
+		(end -2.58 -1.52)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b5b0ff2a-0dfd-4f1e-a708-d9f7175c68f8")
+	)
+	(fp_line
+		(start 2.58 -1.52)
+		(end 2.58 1.52)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a710590c-43a7-4446-91d6-f5db147bc00e")
+	)
+	(fp_line
+		(start 2.58 1.52)
+		(end -2.58 1.52)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "97d2d985-3ab3-4419-8642-cb51103f0aa8")
+	)
+	(fp_circle
+		(center -2.67 2.68)
+		(end -2.52 2.68)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "18d38e0f-6425-412b-a59a-9fca182e22ad")
+	)
+	(fp_circle
+		(center -1.9 0.77)
+		(end -1.75 0.77)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "20e66b55-299a-42cf-9ae6-394b55a1309c")
+	)
+	(fp_circle
+		(center -1.9 3.4)
+		(end -1.75 3.4)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(fill none)
+		(layer "Cmts.User")
+		(uuid "9d77abfa-241b-4b73-aa00-f6c37d0da301")
+	)
+	(fp_circle
+		(center -2.45 3)
+		(end -2.42 3)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "25ac4aea-5fb2-4048-9c8c-2a1be95c01e0")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "624ca667-7ad4-416a-96c7-f57fb1a26539")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd oval
+		(at -1.9 2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "6967bd3e-7b5c-429a-9bef-421ee77a46c4")
+	)
+	(pad "2" smd oval
+		(at -0.63 2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "ddc944d6-8874-43c3-be28-7f1e96f33991")
+	)
+	(pad "3" smd oval
+		(at 0.64 2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "4da7738a-1ecb-4fe7-a1ed-9b9f26cb09d0")
+	)
+	(pad "4" smd oval
+		(at 1.91 2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "553bc2b7-ac20-4db4-b6f4-3d3260ced469")
+	)
+	(pad "5" smd oval
+		(at 1.91 -2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "b1ed03ab-2226-4b58-910f-38d1736a16d3")
+	)
+	(pad "6" smd oval
+		(at 0.64 -2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "2f434819-753e-4a1f-9987-8eacb7afcf7b")
+	)
+	(pad "7" smd oval
+		(at -0.63 -2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "4799f40e-6f8c-4908-ac89-659c504616a1")
+	)
+	(pad "8" smd oval
+		(at -1.9 -2.68)
+		(size 0.63 1.86)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "f585492f-2231-4c73-82e5-4710fa20bbf3")
+	)
+	(model "${KICAD_3RD_PARTY}/custom_models/PY32F002AL15S6TU/PY32F002AL15S6TU.3dshapes/SOP-8_L4.9-W3.9-P1.27-LS6.0-BL-1.wrl"
+		(offset
+			(xyz 0 -0 0.8)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
