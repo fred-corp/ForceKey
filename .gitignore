@@ -1,1 +1,11 @@
 .vscode
+
+# ignore for KiCAD
+*.bak
+*.bck
+*-backups*
+*-cache*
+
+# ignore for PY32 software
+Build
+Examples
