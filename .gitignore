@@ -5,6 +5,7 @@
 *.bck
 *-backups*
 *-cache*
+*.lck
 
 # ignore for PY32 software
 Build
