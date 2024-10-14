@@ -3749,16 +3749,6 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 29.21) (xy 219.71 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e0a90870-c6d4-453c-b354-1d54f80b7f3a")
-	)
-	(wire
-		(pts
 			(xy 135.89 127) (xy 129.54 127)
 		)
 		(stroke
@@ -3866,6 +3856,16 @@
 			(type default)
 		)
 		(uuid "f2c00fee-0f1a-4e6e-8894-45fd1d2d3dba")
+	)
+	(wire
+		(pts
+			(xy 219.71 29.21) (xy 219.71 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f765ecc5-29c2-4640-ab0e-99d03de7498c")
 	)
 	(wire
 		(pts
@@ -5347,14 +5347,12 @@
 	)
 	(symbol
 		(lib_id "SK12D07VG6:SK12D07VG6")
-		(at 212.09 31.75 0)
-		(mirror x)
+		(at 212.09 31.75 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "8634ee12-b006-4fe2-816a-14c531379a76")
 		(property "Reference" "SW1"
 			(at 212.09 19.05 0)

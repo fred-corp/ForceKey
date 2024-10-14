@@ -276,7 +276,7 @@
 		(remove_unused_layers no)
 		(uuid "625ee077-2694-4e3b-843f-26c6c5100809")
 	)
-	(model "${KICAD_3RD_PARTY}/custom_models/SHOU_HAN_TYPE-C_16PIN_2MD_073/SHOU_HAN_TYPE-C_16PIN_2MD_073.3dshapes/USB-C-SMD_TYPE-C-6PIN-2MD-073.step"
+	(model "${KICAD_3RD_PARTY}/custom_models/SHOU_HAN_TYPE-C_16PIN_2MD_073/SHOU_HAN_TYPE-C_16PIN_2MD_073.3dshapes/USB-C-SMD_TYPE-C-6PIN-2MD-073.wrl"
 		(offset
 			(xyz 0 -1.2 1.7)
 		)
