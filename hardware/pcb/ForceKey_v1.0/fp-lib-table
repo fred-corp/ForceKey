@@ -4,4 +4,5 @@
   (lib (name "PY32")(type "KiCad")(uri "${KIPRJMOD}/PY32.pretty")(options "")(descr ""))
   (lib (name "TYPE-C")(type "KiCad")(uri "${KIPRJMOD}/TYPE-C.pretty")(options "")(descr ""))
   (lib (name "PJ4054B")(type "KiCad")(uri "${KICAD_3RD_PARTY}/custom_models/PJ4054B/PJ4054B.pretty")(options "")(descr ""))
+  (lib (name "SK12D07VG6")(type "KiCad")(uri "${KICAD_3RD_PARTY}/custom_models/SK12D07VG6/SK12D07VG6.pretty")(options "")(descr ""))
 )

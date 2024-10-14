@@ -4,4 +4,5 @@
   (lib (name "PY32")(type "KiCad")(uri "${KIPRJMOD}/PY32.kicad_sym")(options "")(descr ""))
   (lib (name "TYPE-C")(type "KiCad")(uri "${KIPRJMOD}/TYPE-C.kicad_sym")(options "")(descr ""))
   (lib (name "PJ4054B")(type "KiCad")(uri "${KIPRJMOD}/PJ4054B.kicad_sym")(options "")(descr ""))
+  (lib (name "SK12D07VG6")(type "KiCad")(uri "${KIPRJMOD}/SK12D07VG6.kicad_sym")(options "")(descr ""))
 )
