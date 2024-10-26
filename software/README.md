@@ -5,18 +5,18 @@
 * Supports J-Link and DAPLink/PyOCD programmers
 * Supports IDE: VSCode
 
-# Puya PY32F0 Family
+## Puya PY32F0 Family
 
 PY32F0 are cost-effective Arm Cortex-M0+ microcontrollers featured with wide range operating voltage from 1.7V to 5.5V. Datesheets and Reference Manuals can be found at [WIKI](https://github.com/IOsetting/py32f0-template/wiki).
 
-## PY32F002B
+### PY32F002B
 
 Frequency up to 24 MHz, 24 Kbytes of Flash memory, 3 Kbytes of SRAM.
 
 * PY32F002B
   * PY32F002Bx(24KB Flash/3KB RAM)
 
-## PY32F0xx
+### PY32F0xx
 
 Frequency up to 48 MHz, 16 to 64 Kbytes of Flash memory, 3 to 8 Kbytes of SRAM.
 
@@ -27,7 +27,7 @@ Frequency up to 48 MHz, 16 to 64 Kbytes of Flash memory, 3 to 8 Kbytes of SRAM.
 * PY32F030
   * PY32F030x4(16KB Flash/2KB RAM), PY32F030x6(32KB Flash/4KB RAM), PY32F030x8(64KB Flash/8KB RAM)
 
-## PY32F07x
+### PY32F07x
 
 Frequency up to 72 MHz, 128 Kbytes of Flash memory, 16 Kbytes of SRAM, with more peripherals(CAN, USB)
 
@@ -38,9 +38,9 @@ Frequency up to 72 MHz, 128 Kbytes of Flash memory, 16 Kbytes of SRAM, with more
 * PY32F072
   * PY32F072xB(128KB Flash/16KB RAM)
 
-# File Structure
+## File Structure
 
-```
+```txt
 ├── Build                       # Build results
 ├── Docs                        # Datesheets and User Manuals
 ├── Examples
@@ -81,7 +81,7 @@ Frequency up to 72 MHz, 128 Kbytes of Flash memory, 16 Kbytes of SRAM, with more
 └── User                        # User application code
 ```
 
-# Requirements
+## Requirements
 
 * PY32F0 EVB or boards of PY32F002/003/030 series
 * Programmer
@@ -91,9 +91,9 @@ Frequency up to 72 MHz, 128 Kbytes of Flash memory, 16 Kbytes of SRAM, with more
 * PyOCD [https://pyocd.io/](https://pyocd.io/)
 * GNU Arm Embedded Toolchain
 
-# Building
+## Building
 
-## 1. Install GNU Arm Embedded Toolchain
+### 1. Install GNU Arm Embedded Toolchain
 
 Download the toolchain from [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) according to your pc architecture, extract the files
 
@@ -104,35 +104,31 @@ cd /opt/gcc-arm/
 sudo chown -R root:root arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/
 ```
 
-## 2. Clone This Repository
+### 2. Clone This Repository
 
 Clone this repository to local workspace
+
 ```bash
 git clone https://github.com/IOsetting/py32f0-template.git
 ```
 
-## 3. Install SEGGER J-Link Or PyOCD
+### 3. Install SEGGER J-Link Or PyOCD
 
-### Option 1: Install SEGGER J-Link
+#### Option 1: Install SEGGER J-Link
 
 Download and install JLink from [J-Link / J-Trace Downloads](https://www.segger.com/downloads/jlink/).
 
-```bash
-# installation command for .deb
-sudo dpkg -i JLink_Linux_V784f_x86_64.deb
-# uncompression command for .tar.gz
-sudo tar xvf JLink_Linux_V784f_x86_64.tgz -C [target folder]
-```
 The default installation directory is */opt/SEGGER*
 
 Copy [Project directory]/Misc/Flash/JLinkDevices to [User home]/.config/SEGGER/
+
 ```bash
-cd py32f0-template
-cp -r Misc/Flash/JLinkDevices/ ~/.config/SEGGER/
+cp -r Misc/Flash/JLinkDevices/ "$HOME/Library/Application Support/SEGGER/JLinkDevices"
 ```
+
 Read more: [https://wiki.segger.com/J-Link_Device_Support_Kit](https://wiki.segger.com/J-Link_Device_Support_Kit)
 
-### Option 2: Install PyOCD
+#### Option 2: Install PyOCD
 
 Don't install from apt repository, because the version 0.13.1+dfsg-1 is too low for J-Link probe.
 
@@ -141,16 +137,19 @@ Install PyOCD from pip
 ```bash
 pip uninstall pyocd
 ```
+
 This will install PyOCD into:
-```
+
+```bash
 /home/[user]/.local/bin/pyocd
 /home/[user]/.local/bin/pyocd-gdbserver
 /home/[user]/.local/lib/python3.10/site-packages/pyocd-0.34.2.dist-info/*
 /home/[user]/.local/lib/python3.10/site-packages/pyocd/*
 ```
+
 In Ubuntu, .profile will take care of the PATH, run `source ~/.profile` to make pyocd command available
 
-## 4. Edit Makefile
+### 4. Edit Makefile
 
 Change the settings in Makefile
 
@@ -169,9 +168,9 @@ Change the settings in Makefile
 ```makefile
 ##### Project #####
 
-PROJECT			?= app
+PROJECT   ?= app
 # The path for generated files
-BUILD_DIR		= Build
+BUILD_DIR  = Build
 
 # MCU types: 
 #   PY32F002Ax5
@@ -179,7 +178,7 @@ BUILD_DIR		= Build
 #   PY32F003x6, PY32F003x8, 
 #   PY32F030x6, PY32F030x8, 
 #   PY32F072xB
-MCU_TYPE		= PY32F072xB
+MCU_TYPE  = PY32F072xB
 
 ##### Options #####
 
@@ -198,12 +197,12 @@ FLASH_PROGRM      ?= pyocd
 ARM_TOOCHAIN      ?= /opt/gcc-arm/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
 
 # path to JLinkExe
-JLINKEXE		?= /opt/SEGGER/JLink/JLinkExe
+JLINKEXE  ?= /opt/SEGGER/JLink/JLinkExe
 # path to PyOCD
-PYOCD_EXE		?= pyocd
+PYOCD_EXE  ?= pyocd
 ```
 
-## 5. Compiling And Flashing
+### 5. Compiling And Flashing
 
 ```bash
 # clean source code
@@ -216,10 +215,11 @@ V=1 make
 make flash
 ```
 
-# Debugging In VSCode
+## Debugging In VSCode
 
 Install Cortex Debug extension, add a new configuration in launch.json, e.g.
-```
+
+```json
 {
     "armToolchainPath": "/opt/gcc-arm/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin/",
     "toolchainPrefix": "arm-none-eabi",
@@ -256,15 +256,17 @@ Install Cortex Debug extension, add a new configuration in launch.json, e.g.
     }
 }
 ```
+
 If Cortex Debug cannot find JLinkGDBServerCLExe, add the following line to settings.json
-```
+
+```json
 "cortex-debug.JLinkGDBServerPath": "/opt/SEGGER/JLink/JLinkGDBServerCLExe",
 ```
 
-# Try Other Examples
+## Try Other Examples
 
 More examples can be found in *Examples* folder, copy and replace the files under *User* folder to try different examples.
 
-# Links
+## Links
 
-* Puya Product Page(Datasheet download): https://www.puyasemi.com/mcu_weichuliqi.html
+* Puya Product Page(Datasheet download): <https://www.puyasemi.com/mcu_weichuliqi.html>
