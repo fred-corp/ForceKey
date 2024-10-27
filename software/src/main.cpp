@@ -25,22 +25,24 @@
 #include "stdbool.h"
 
 /* Parameters ----------------------------------------------------------------*/
-const int32_t THRESHOLD_LEFT  = 80000;
-const int32_t THRESHOLD_RIGHT = 150000;
+const int32_t THRESHOLD_ON_LEFT   = 300000;
+const int32_t THRESHOLD_OFF_LEFT  = 200000;
+const int32_t THRESHOLD_ON_RIGHT  = 300000;
+const int32_t THRESHOLD_OFF_RIGHT = 200000;
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-int32_t data_in        = 0;
-int32_t data_left      = 0;
-int32_t cal_data_left  = 0;
-bool cal_left          = false;
-bool pressed_left      = false;
-int32_t data_right     = 0;
-int32_t cal_data_right = 0;
-bool cal_right         = false;
-bool pressed_right     = false;
+int32_t data_left_in        = 0;
+int32_t data_left_left      = 0;
+int32_t cal_data_left_left  = 0;
+bool cal_left               = false;
+bool pressed_left           = false;
+int32_t data_left_right     = 0;
+int32_t cal_data_left_right = 0;
+bool cal_right              = false;
+bool pressed_right          = false;
 
-bool read_right        = false;
+bool read_right             = false;
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -61,97 +63,83 @@ int main(void) {
     }
 
     while (1) {
-        while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
+        while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET) {
         }
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) {
-            unsigned long value = 0;
-            uint8_t data[3]     = {0};
-            uint8_t filler      = 0x00;
-            if (read_right) {
-                for (int i = 0; i < 27; i++) {
-                    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-                    if (i < 8) {
-                        data[2] = (data[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    } else if (i >= 8 && i < 16) {
-                        data[1] = (data[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    } else if (i >= 16 && i < 24) {
-                        data[0] = (data[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    }
-                    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET) {
+            unsigned long value_left  = 0;
+            uint8_t data_left[3]      = {0};
+            uint8_t filler_left       = 0x00;
+            unsigned long value_right = 0;
+            uint8_t data_right[3]     = {0};
+            uint8_t filler_right      = 0x00;
+
+            for (int i = 0; i < 25; i++) {
+                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+                if (i < 8) {
+                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
+                } else if (i >= 8 && i < 16) {
+                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
+                } else if (i >= 16 && i < 24) {
+                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
                 }
-
-                if (data[2] & 0x80) {
-                    filler = 0xFF;
-                } else {
-                    filler = 0x00;
-                }
-                value      = value << 8 | filler;
-                value      = value << 8 | data[2];
-                value      = value << 8 | data[1];
-                value      = value << 8 | data[0];
-
-                data_right = value;
-
-                if (!cal_right) {
-                    cal_data_right = data_right;
-                    cal_right      = true;
-                }
-
-                if (data_right - cal_data_right >= THRESHOLD_RIGHT) {
-                    pressed_right = true;
-                } else {
-                    pressed_right = false;
-                }
-
-                read_right = false;
-            } else {
-                for (int i = 0; i < 26; i++) {
-                    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-                    if (i < 8) {
-                        data[2] = (data[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    } else if (i >= 8 && i < 16) {
-                        data[1] = (data[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    } else if (i >= 16 && i < 24) {
-                        data[0] = (data[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    }
-                    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-                }
-
-                if (data[2] & 0x80) {
-                    filler = 0xFF;
-                } else {
-                    filler = 0x00;
-                }
-                value     = value << 8 | filler;
-                value     = value << 8 | data[2];
-                value     = value << 8 | data[1];
-                value     = value << 8 | data[0];
-
-                data_left = value;
-
-                if (!cal_left) {
-                    cal_data_left = data_left;
-                    cal_left      = true;
-                }
-
-                if (data_left - cal_data_left >= THRESHOLD_LEFT) {
-                    pressed_left = true;
-                } else {
-                    pressed_left = false;
-                }
-
-                read_right = true;
+                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
             }
+
+            if (data_left[2] & 0x80) {
+                filler_left = 0xFF;
+            } else {
+                filler_left = 0x00;
+            }
+            value_left = value_left << 8 | filler_left;
+            value_left = value_left << 8 | data_left[2];
+            value_left = value_left << 8 | data_left[1];
+            value_left = value_left << 8 | data_left[0];
+
+            if (data_right[2] & 0x80) {
+                filler_right = 0xFF;
+            } else {
+                filler_right = 0x00;
+            }
+            value_right = value_right << 8 | filler_right;
+            value_right = value_right << 8 | data_right[2];
+            value_right = value_right << 8 | data_right[1];
+            value_right = value_right << 8 | data_right[0];
+
+            data_left_left = value_left;
+            data_left_right = value_right;
+
+            if (!cal_left) {
+                cal_data_left_left = data_left_left;
+                cal_left           = true;
+            }
+
+            if (!cal_right) {
+                cal_data_left_right = data_left_right;
+                cal_right           = true;
+            }
+
+            if (data_left_left - cal_data_left_left >= THRESHOLD_ON_LEFT) {
+                pressed_left = true;
+            } else if (data_left_left - cal_data_left_left <= THRESHOLD_OFF_LEFT) {
+                pressed_left = false;
+            }
+
+            if (data_left_right - cal_data_left_right >= THRESHOLD_ON_RIGHT) {
+                pressed_right = true;
+            } else if (data_left_right - cal_data_left_right <= THRESHOLD_OFF_RIGHT) {
+                pressed_right = false;
         }
-        // left : 32000000
+
         if (pressed_left) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
         } else {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
         }
-        // HAL_Delay(500);
-        // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
-        // printf("echo\r\n");
+
+        // HAL_Delay(10);
     }
 }
 
@@ -176,6 +164,13 @@ static void APP_LedConfig(void) {
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = GPIO_PIN_0;
+    GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull  = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin   = GPIO_PIN_2;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
