@@ -22,6 +22,14 @@
 #define RIGHT_PIN GPIO_PIN_2
 #define RIGHT_PORT GPIOA
 
+#define DOT_PIN GPIO_PIN_5
+#define DOT_PORT GPIOB
+#define DASH_PIN GPIO_PIN_6
+#define DASH_PORT GPIOB
+
+#define HIGH GPIO_PIN_SET
+#define LOW GPIO_PIN_RESET
+
 /* Parameters ----------------------------------------------------------------*/
 const int32_t THRESHOLD_ON_LEFT   = 300000;
 const int32_t THRESHOLD_OFF_LEFT  = 200000;
@@ -51,20 +59,20 @@ int main(void) {
     APP_LedConfig();
 
     for (int i = 0; i < 10; i++) {
-        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_SET) {
+        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == HIGH) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == HIGH) {
         }
-        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET) {
+        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW) {
             for (int i = 0; i < 27; i++) {
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_SET);
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
             }
         }
     }
 
     while (1) {
-        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_SET) {
+        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == HIGH) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == HIGH) {
         }
-        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET) {
+        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW) {
             unsigned long value_left  = 0;
             uint8_t data_left[3]      = {0};
             uint8_t filler_left       = 0x00;
@@ -73,18 +81,18 @@ int main(void) {
             uint8_t filler_right      = 0x00;
 
             for (int i = 0; i < 25; i++) {
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
                 if (i < 8) {
-                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
                 } else if (i >= 8 && i < 16) {
-                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
                 } else if (i >= 16 && i < 24) {
-                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
                 }
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
             }
 
             if (data_left[2] & 0x80) {
@@ -133,9 +141,17 @@ int main(void) {
             }
 
             if (pressed_left) {
-                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, LOW);
+                HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, HIGH);
             } else {
-                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
+                HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
+            }
+
+            if (pressed_right) {
+                HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, HIGH);
+            } else {
+                HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
             }
 
             // HAL_Delay(10);
@@ -153,31 +169,42 @@ static void APP_LedConfig(void) {
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = SCK_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
     HAL_GPIO_Init(SCK_PORT, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = LEFT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
     HAL_GPIO_Init(LEFT_PORT, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = RIGHT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
     HAL_GPIO_Init(RIGHT_PORT, &GPIO_InitStruct);
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+    GPIO_InitStruct.Pin   = DOT_PIN;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull  = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(DOT_PORT, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin   = DASH_PIN;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull  = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(DASH_PORT, &GPIO_InitStruct);
+
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
+    HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
+    HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
+    HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
 }
 
 void APP_ErrorHandler(void) {
