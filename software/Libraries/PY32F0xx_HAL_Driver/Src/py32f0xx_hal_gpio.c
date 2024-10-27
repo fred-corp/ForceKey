@@ -110,6 +110,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup PY32F0xx_HAL_Driver
   * @{
   */
@@ -530,3 +534,7 @@ void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
   */
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/
+
+#ifdef __cplusplus
+}
+#endif
