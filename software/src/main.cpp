@@ -9,10 +9,18 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdbool.h>
 #include <py32f003x6.h>
 #include <py32f0xx_hal.h>
 #include <py32f0xx_hal_gpio.h>
+#include <stdbool.h>
+
+/* Private define ------------------------------------------------------------*/
+#define SCK_PIN GPIO_PIN_1
+#define SCK_PORT GPIOA
+#define LEFT_PIN GPIO_PIN_0
+#define LEFT_PORT GPIOA
+#define RIGHT_PIN GPIO_PIN_2
+#define RIGHT_PORT GPIOA
 
 /* Parameters ----------------------------------------------------------------*/
 const int32_t THRESHOLD_ON_LEFT   = 300000;
@@ -20,7 +28,6 @@ const int32_t THRESHOLD_OFF_LEFT  = 200000;
 const int32_t THRESHOLD_ON_RIGHT  = 300000;
 const int32_t THRESHOLD_OFF_RIGHT = 200000;
 
-/* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 int32_t data_left_in        = 0;
 int32_t data_left_left      = 0;
@@ -44,18 +51,20 @@ int main(void) {
     APP_LedConfig();
 
     for (int i = 0; i < 10; i++) {
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) {
+        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_SET) {
+        }
+        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET) {
             for (int i = 0; i < 27; i++) {
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_RESET);
             }
         }
     }
 
     while (1) {
-        while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET) {
+        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_SET) { // || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_SET) {
         }
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET) {
+        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET) { // && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET) {
             unsigned long value_left  = 0;
             uint8_t data_left[3]      = {0};
             uint8_t filler_left       = 0x00;
@@ -64,18 +73,18 @@ int main(void) {
             uint8_t filler_right      = 0x00;
 
             for (int i = 0; i < 25; i++) {
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_SET);
                 if (i < 8) {
-                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
                 } else if (i >= 8 && i < 16) {
-                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
                 } else if (i >= 16 && i < 24) {
-                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET ? 0 : 1);
-                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET ? 0 : 1);
+                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == GPIO_PIN_RESET ? 0 : 1);
+                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == GPIO_PIN_RESET ? 0 : 1);
                 }
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, GPIO_PIN_RESET);
             }
 
             if (data_left[2] & 0x80) {
@@ -147,26 +156,26 @@ static void APP_LedConfig(void) {
 
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin   = GPIO_PIN_1;
+    GPIO_InitStruct.Pin   = SCK_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(SCK_PORT, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin   = GPIO_PIN_0;
+    GPIO_InitStruct.Pin   = LEFT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(LEFT_PORT, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin   = GPIO_PIN_2;
+    GPIO_InitStruct.Pin   = RIGHT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(RIGHT_PORT, &GPIO_InitStruct);
 
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
 }
