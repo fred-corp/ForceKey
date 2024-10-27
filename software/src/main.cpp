@@ -103,12 +103,12 @@ int main(void) {
             } else {
                 filler_right = 0x00;
             }
-            value_right = value_right << 8 | filler_right;
-            value_right = value_right << 8 | data_right[2];
-            value_right = value_right << 8 | data_right[1];
-            value_right = value_right << 8 | data_right[0];
+            value_right     = value_right << 8 | filler_right;
+            value_right     = value_right << 8 | data_right[2];
+            value_right     = value_right << 8 | data_right[1];
+            value_right     = value_right << 8 | data_right[0];
 
-            data_left_left = value_left;
+            data_left_left  = value_left;
             data_left_right = value_right;
 
             if (!cal_left) {
@@ -131,15 +131,16 @@ int main(void) {
                 pressed_right = true;
             } else if (data_left_right - cal_data_left_right <= THRESHOLD_OFF_RIGHT) {
                 pressed_right = false;
-        }
+            }
 
-        if (pressed_left) {
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
-        } else {
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
-        }
+            if (pressed_left) {
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+            } else {
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+            }
 
-        // HAL_Delay(10);
+            // HAL_Delay(10);
+        }
     }
 }
 
