@@ -9,22 +9,22 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include <py32f003x6.h>
+#include <PY32F002Ax5.h>
 #include <py32f0xx_hal.h>
 #include <py32f0xx_hal_gpio.h>
 #include <stdbool.h>
 
 /* Private define ------------------------------------------------------------*/
-#define SCK_PIN GPIO_PIN_1
+#define SCK_PIN GPIO_PIN_4
 #define SCK_PORT GPIOA
-#define LEFT_PIN GPIO_PIN_0
+#define LEFT_PIN GPIO_PIN_3
 #define LEFT_PORT GPIOA
-#define RIGHT_PIN GPIO_PIN_2
+#define RIGHT_PIN GPIO_PIN_14
 #define RIGHT_PORT GPIOA
 
-#define DOT_PIN GPIO_PIN_5
+#define DOT_PIN GPIO_PIN_1
 #define DOT_PORT GPIOA
-#define DASH_PIN GPIO_PIN_6
+#define DASH_PIN GPIO_PIN_13
 #define DASH_PORT GPIOA
 
 #define HIGH GPIO_PIN_SET
@@ -150,11 +150,11 @@ int main(void) {
                 HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
             }
 
-            if (pressed_left || pressed_right) {
-                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, LOW);
-            } else {
-                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
-            }
+            // if (pressed_left || pressed_right) {
+            //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, LOW);
+            // } else {
+            //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
+            // }
 
             // HAL_Delay(10);
         }
@@ -167,11 +167,11 @@ static void APP_LedConfig(void) {
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
-    GPIO_InitStruct.Pin   = GPIO_PIN_5;
-    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull  = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    // GPIO_InitStruct.Pin   = GPIO_PIN_5;
+    // GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    // GPIO_InitStruct.Pull  = GPIO_PULLUP;
+    // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = SCK_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -203,7 +203,7 @@ static void APP_LedConfig(void) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(DASH_PORT, &GPIO_InitStruct);
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
     HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
     HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
     HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
