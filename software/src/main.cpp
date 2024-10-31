@@ -14,6 +14,10 @@
 #include <py32f0xx_hal_gpio.h>
 #include <stdbool.h>
 
+/* Options -------------------------------------------------------------------*/
+#define TWO_PADDLES
+#define ONE_PADDLE
+
 /* Private define ------------------------------------------------------------*/
 #define SCK_PIN GPIO_PIN_4
 #define SCK_PORT GPIOA
@@ -49,129 +53,31 @@ bool pressed_right     = false;
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void APP_LedConfig(void);
+static void setup(void);
+static void loop(void);
+static bool paddles_ready(void);
+static void read_paddles(bool *pressed_left, bool *pressed_right);
 
 int main(void) {
     HAL_Init();
 
-    APP_LedConfig();
-
-    for (int i = 0; i < 10; i++) {
-        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == HIGH || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == HIGH) {
-        }
-        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW) {
-            for (int i = 0; i < 27; i++) {
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
-            }
-        }
-    }
+    setup();
 
     while (1) {
-        while (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == HIGH || HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == HIGH) {
-        }
-        if (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW) {
-            uint32_t value_left   = 0;
-            uint8_t data_left[3]  = {0};
-            uint8_t filler_left   = 0x00;
-            uint32_t value_right  = 0;
-            uint8_t data_right[3] = {0};
-            uint8_t filler_right  = 0x00;
-
-            for (int i = 0; i < 25; i++) {
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
-                if (i < 8) {
-                    data_left[2]  = (data_left[2] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
-                    data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
-                } else if (i >= 8 && i < 16) {
-                    data_left[1]  = (data_left[1] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
-                    data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
-                } else if (i >= 16 && i < 24) {
-                    data_left[0]  = (data_left[0] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
-                    data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
-                }
-                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
-            }
-
-            if (data_left[2] & 0x80) {
-                filler_left = 0xFF;
-            } else {
-                filler_left = 0x00;
-            }
-            value_left = value_left << 8 | filler_left;
-            value_left = value_left << 8 | data_left[2];
-            value_left = value_left << 8 | data_left[1];
-            value_left = value_left << 8 | data_left[0];
-
-            if (data_right[2] & 0x80) {
-                filler_right = 0xFF;
-            } else {
-                filler_right = 0x00;
-            }
-            value_right   = value_right << 8 | filler_right;
-            value_right   = value_right << 8 | data_right[2];
-            value_right   = value_right << 8 | data_right[1];
-            value_right   = value_right << 8 | data_right[0];
-
-            data_left_in  = value_left;
-            data_right_in = value_right;
-
-            if (!cal_left) {
-                cal_data_left = data_left_in;
-                cal_left      = true;
-            }
-
-            if (!cal_right) {
-                cal_data_right = data_right_in;
-                cal_right      = true;
-            }
-
-            if (data_left_in - cal_data_left >= THRESHOLD_ON_LEFT) {
-                pressed_left = true;
-            } else if (data_left_in - cal_data_left <= THRESHOLD_OFF_LEFT) {
-                pressed_left = false;
-            }
-
-            if (data_right_in - cal_data_right >= THRESHOLD_ON_RIGHT) {
-                pressed_right = true;
-            } else if (data_right_in - cal_data_right <= THRESHOLD_OFF_RIGHT) {
-                pressed_right = false;
-            }
-
-            if (pressed_left) {
-                HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, HIGH);
-            } else {
-                HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
-            }
-
-            if (pressed_right) {
-                HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, HIGH);
-            } else {
-                HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
-            }
-
-            // if (pressed_left || pressed_right) {
-            //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, LOW);
-            // } else {
-            //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
-            // }
-
-            // HAL_Delay(10);
-        }
+        loop();
     }
 }
 
-static void APP_LedConfig(void) {
+static void setup(void) {
     GPIO_InitTypeDef GPIO_InitStruct;
+
+// Raise compile error if one or both paddles are not connected
+#if !defined(TWO_PADDLES) && !defined(ONE_PADDLE)
+#error "Please define TWO_PADDLES or ONE_PADDLE"
+#endif
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    // GPIO_InitStruct.Pin   = GPIO_PIN_5;
-    // GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    // GPIO_InitStruct.Pull  = GPIO_PULLUP;
-    // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin   = SCK_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -185,11 +91,13 @@ static void APP_LedConfig(void) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(LEFT_PORT, &GPIO_InitStruct);
 
+#ifdef TWO_PADDLES
     GPIO_InitStruct.Pin   = RIGHT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(RIGHT_PORT, &GPIO_InitStruct);
+#endif
 
     GPIO_InitStruct.Pin   = DOT_PIN;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -203,10 +111,138 @@ static void APP_LedConfig(void) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(DASH_PORT, &GPIO_InitStruct);
 
-    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HIGH);
     HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
     HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
     HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
+
+    // Set HX711 Gain and Channel a few times to stabilize the output
+    for (int i = 0; i < 10; i++) {
+        while (!paddles_ready()) {
+        }
+        if (paddles_ready()) {
+            for (int i = 0; i < 27; i++) {
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
+                HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
+            }
+        }
+    }
+}
+
+static void loop(void) {
+    while (!paddles_ready()) {
+    }
+    if (paddles_ready()) {
+        read_paddles(&pressed_left, &pressed_right);
+
+        if (pressed_left) {
+            HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, HIGH);
+        } else {
+            HAL_GPIO_WritePin(DOT_PORT, DOT_PIN, LOW);
+        }
+
+        if (pressed_right) {
+            HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, HIGH);
+        } else {
+            HAL_GPIO_WritePin(DASH_PORT, DASH_PIN, LOW);
+        }
+    }
+}
+
+static bool paddles_ready(void) {
+#ifdef TWO_PADDLES
+    return (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW && HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW);
+#else
+    return (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW);
+#endif
+}
+
+static void read_paddles(bool *_pressed_left, bool *_pressed_right) {
+    uint32_t value_left   = 0;
+    uint8_t data_left[3]  = {0};
+    uint8_t filler_left   = 0x00;
+    uint32_t value_right  = 0;
+    uint8_t data_right[3] = {0};
+    uint8_t filler_right  = 0x00;
+
+    for (int i = 0; i < 25; i++) {
+        HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
+        if (i < 8) {
+            data_left[2] = (data_left[2] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+#ifdef TWO_PADDLES
+            data_right[2] = (data_right[2] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
+#endif
+        } else if (i >= 8 && i < 16) {
+            data_left[1] = (data_left[1] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+#ifdef TWO_PADDLES
+            data_right[1] = (data_right[1] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
+#endif
+        } else if (i >= 16 && i < 24) {
+            data_left[0] = (data_left[0] << 1) | (HAL_GPIO_ReadPin(LEFT_PORT, LEFT_PIN) == LOW ? 0 : 1);
+#ifdef TWO_PADDLES
+            data_right[0] = (data_right[0] << 1) | (HAL_GPIO_ReadPin(RIGHT_PORT, RIGHT_PIN) == LOW ? 0 : 1);
+#endif
+        }
+        HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, LOW);
+    }
+
+    if (data_left[2] & 0x80) {
+        filler_left = 0xFF;
+    } else {
+        filler_left = 0x00;
+    }
+    value_left   = value_left << 8 | filler_left;
+    value_left   = value_left << 8 | data_left[2];
+    value_left   = value_left << 8 | data_left[1];
+    value_left   = value_left << 8 | data_left[0];
+
+    data_left_in = value_left;
+
+    if (!cal_left) {
+        cal_data_left = data_left_in;
+        cal_left      = true;
+    }
+
+    if (data_left_in - cal_data_left >= THRESHOLD_ON_LEFT) {
+        *_pressed_left = true;
+    } else if (data_left_in - cal_data_left <= THRESHOLD_OFF_LEFT) {
+        *_pressed_left = false;
+    }
+
+#ifdef TWO_PADDLES
+    if (data_right[2] & 0x80) {
+        filler_right = 0xFF;
+    } else {
+        filler_right = 0x00;
+    }
+    value_right   = value_right << 8 | filler_right;
+    value_right   = value_right << 8 | data_right[2];
+    value_right   = value_right << 8 | data_right[1];
+    value_right   = value_right << 8 | data_right[0];
+
+    data_right_in = value_right;
+
+    if (!cal_right) {
+        cal_data_right = data_right_in;
+        cal_right      = true;
+    }
+
+    if (data_right_in - cal_data_right >= THRESHOLD_ON_RIGHT) {
+        *_pressed_right = true;
+#ifdef ONE_PADDLE
+        return;
+#endif
+    } else if (data_right_in - cal_data_right <= THRESHOLD_OFF_RIGHT) {
+        *_pressed_right = false;
+    }
+#endif
+
+#ifdef ONE_PADDLE
+    if (data_left_in - cal_data_left <= -THRESHOLD_ON_LEFT) {
+        *_pressed_right = true;
+    } else if (data_left_in - cal_data_left >= -THRESHOLD_OFF_LEFT) {
+        *_pressed_right = false;
+    }
+#endif
 }
 
 void APP_ErrorHandler(void) {
