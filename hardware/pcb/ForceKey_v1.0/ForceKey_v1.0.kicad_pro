@@ -487,9 +487,9 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "ForceKey_v1.0.step",
       "svg": "",
-      "vrml": ""
+      "vrml": "ForceKey_v1.0.wrl"
     },
     "page_layout_descr_file": ""
   },
