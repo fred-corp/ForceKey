@@ -15,10 +15,10 @@
 #include <stdbool.h>
 
 /* Options -------------------------------------------------------------------*/
-#define TWO_PADDLES
-#define ONE_PADDLE
+#define ONE_PADDLE  // Define this if for single paddle operation (compatible with two paddles)
+#define TWO_PADDLES // Define this if for two paddles operation (need to have two paddles connected)
 
-/* Private define ------------------------------------------------------------*/
+/* Pin definitions -----------------------------------------------------------*/
 #define SCK_PIN GPIO_PIN_4
 #define SCK_PORT GPIOA
 #define LEFT_PIN GPIO_PIN_3
@@ -31,6 +31,7 @@
 #define DASH_PIN GPIO_PIN_13
 #define DASH_PORT GPIOA
 
+/* Private define ------------------------------------------------------------*/
 #define HIGH GPIO_PIN_SET
 #define LOW GPIO_PIN_RESET
 
@@ -58,6 +59,14 @@ static void loop(void);
 static bool paddles_ready(void);
 static void read_paddles(bool *pressed_left, bool *pressed_right);
 
+/* Compile checks -----------------------------------------------------------*/
+// Raise compile error if one or both paddles are not connected
+#if !defined(TWO_PADDLES) && !defined(ONE_PADDLE)
+#error "Please define TWO_PADDLES or ONE_PADDLE"
+#endif
+
+/* Main function -------------------------------------------------------------*/
+
 int main(void) {
     HAL_Init();
 
@@ -72,11 +81,6 @@ int main(void) {
 
 static void setup(void) {
     GPIO_InitTypeDef GPIO_InitStruct;
-
-// Raise compile error if one or both paddles are not connected
-#if !defined(TWO_PADDLES) && !defined(ONE_PADDLE)
-#error "Please define TWO_PADDLES or ONE_PADDLE"
-#endif
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -159,12 +163,14 @@ static bool paddles_ready(void) {
 }
 
 static void read_paddles(bool *_pressed_left, bool *_pressed_right) {
-    uint32_t value_left   = 0;
-    uint8_t data_left[3]  = {0};
-    uint8_t filler_left   = 0x00;
+    uint32_t value_left  = 0;
+    uint8_t data_left[3] = {0};
+    uint8_t filler_left  = 0x00;
+#ifdef TWO_PADDLES
     uint32_t value_right  = 0;
     uint8_t data_right[3] = {0};
     uint8_t filler_right  = 0x00;
+#endif
 
     for (int i = 0; i < 25; i++) {
         HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, HIGH);
