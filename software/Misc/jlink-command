@@ -1,4 +1,3 @@
-r0
 erase
 loadfile Build/app.hex 0 noreset
 reset

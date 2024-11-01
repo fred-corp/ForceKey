@@ -61,6 +61,8 @@ static void read_paddles(bool *pressed_left, bool *pressed_right);
 int main(void) {
     HAL_Init();
 
+    HAL_Delay(100);
+
     setup();
 
     while (1) {
