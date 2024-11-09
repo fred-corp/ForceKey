@@ -26,9 +26,9 @@
 #define RIGHT_PIN GPIO_PIN_14
 #define RIGHT_PORT GPIOA
 
-#define DOT_PIN GPIO_PIN_1
+#define DOT_PIN GPIO_PIN_13
 #define DOT_PORT GPIOA
-#define DASH_PIN GPIO_PIN_13
+#define DASH_PIN GPIO_PIN_1
 #define DASH_PORT GPIOA
 
 /* Private define ------------------------------------------------------------*/
