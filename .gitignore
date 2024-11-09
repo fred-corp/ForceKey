@@ -1,5 +1,6 @@
 .vscode
 .DS_Store
+private
 
 # ignore for KiCAD
 *.bak
