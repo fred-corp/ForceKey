@@ -36,10 +36,10 @@
 #define LOW GPIO_PIN_RESET
 
 /* Parameters ----------------------------------------------------------------*/
-const int32_t THRESHOLD_ON_LEFT   = 250000;
-const int32_t THRESHOLD_OFF_LEFT  = 150000;
-const int32_t THRESHOLD_ON_RIGHT  = 250000;
-const int32_t THRESHOLD_OFF_RIGHT = 150000;
+const int32_t THRESHOLD_ON_LEFT   = 150000;
+const int32_t THRESHOLD_OFF_LEFT  = 140000;
+const int32_t THRESHOLD_ON_RIGHT  = 150000;
+const int32_t THRESHOLD_OFF_RIGHT = 140000;
 
 /* Private variables ---------------------------------------------------------*/
 int32_t data_left_in   = 0;
