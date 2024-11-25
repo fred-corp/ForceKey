@@ -23,7 +23,7 @@ The output is a standard 3.5mm stereo jack, which can be connected to any morse 
 - TODO: add more details
 
 The HX711 has to be modded to output data at 80Hz rate, which is done by lifting pin 15 and bridging it to pin 16 :  
-![HX711 mod](images/hx711-mod.jpg)
+![HX711 mod](images/HX711-mod.jpg)
 
 ## Inspiration
 
